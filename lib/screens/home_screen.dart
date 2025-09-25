@@ -1,0 +1,464 @@
+import 'package:flutter/material.dart';
+import '../utils/colors.dart';
+import 'search_screen.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          'GreenCar',
+          style: TextStyle(
+            color: AppColors.primaryGreen,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: AppColors.primaryGreen),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_outlined, color: AppColors.primaryGreen),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Notifications coming soon!')),
+              );
+            },
+          ),
+        ],
+      ),
+      drawer: _buildDrawer(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Welcome message
+                Text(
+                  'Hello, User!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Where are you going today?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 24),
+
+                // Source and destination fields
+                _buildSourceDestinationCard(),
+                SizedBox(height: 24),
+
+                // Latest rides section
+                _buildLatestRidesSection(),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildSourceDestinationCard() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Source field
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(isSource: true),
+                  ),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.circle,
+                      color: AppColors.primaryGreen,
+                      size: 16,
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Enter pickup location',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(),
+            // Destination field
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(isSource: false),
+                  ),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 16,
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Enter drop location',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            // Find rides button
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Finding rides...')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                minimumSize: Size(double.infinity, 50),
+              ),
+              child: Text(
+                'Find Rides',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLatestRidesSection() {
+    // Dummy data for latest rides
+    final List<Map<String, dynamic>> latestRides = [
+      {
+        'source': 'Andheri East',
+        'destination': 'Powai',
+        'date': 'Today, 5:30 PM',
+        'price': '₹120',
+        'seats': 2,
+      },
+      {
+        'source': 'Bandra West',
+        'destination': 'BKC',
+        'date': 'Tomorrow, 9:00 AM',
+        'price': '₹150',
+        'seats': 3,
+      },
+      {
+        'source': 'Malad West',
+        'destination': 'Goregaon East',
+        'date': 'Today, 7:00 PM',
+        'price': '₹100',
+        'seats': 1,
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Latest Rides',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 16),
+        ...latestRides.map((ride) => _buildRideCard(ride)).toList(),
+      ],
+    );
+  }
+
+  Widget _buildRideCard(Map<String, dynamic> ride) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Source and destination
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            color: AppColors.primaryGreen,
+                            size: 12,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              ride['source'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 6),
+                        child: Container(
+                          height: 20,
+                          width: 1,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              ride['destination'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ride['price'],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                    Text(
+                      '${ride['seats']} seats',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  ride['date'],
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Booking ride...')),
+                    );
+                  },
+                  child: Text(
+                    'Book Now',
+                    style: TextStyle(
+                      color: AppColors.primaryGreen,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+        if (index == 4) {
+          _scaffoldKey.currentState?.openDrawer();
+        }
+      },
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: AppColors.primaryGreen,
+      unselectedItemColor: Colors.grey,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.directions_car),
+          label: 'My Rides',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'Response',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.menu),
+          label: 'Menu',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: AppColors.primaryGreen,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: AppColors.primaryGreen,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'User Name',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'user@example.com',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _buildDrawerItem(Icons.home, 'Home'),
+          _buildDrawerItem(Icons.directions_car, 'My Rides'),
+          _buildDrawerItem(Icons.wallet, 'Wallet'),
+          _buildDrawerItem(Icons.notifications, 'Notifications'),
+          _buildDrawerItem(Icons.help, 'Help & Support'),
+          _buildDrawerItem(Icons.info, 'About Us'),
+          _buildDrawerItem(Icons.share, 'Invite Friends'),
+          Divider(),
+          _buildDrawerItem(Icons.logout, 'Logout'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(IconData icon, String title) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primaryGreen),
+      title: Text(title),
+      onTap: () {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$title coming soon!')),
+        );
+      },
+    );
+  }
+}
