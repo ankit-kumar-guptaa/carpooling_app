@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import 'search_screen.dart';
+import 'available_rides_screen.dart';
+import 'offer_ride_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  int _selectedTabIndex = 0; // 0 for Find Ride, 1 for Offer Ride
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -21,13 +24,30 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
-          'GreenCar',
-          style: TextStyle(
-            color: AppColors.primaryGreen,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
+        title: Row(
+          children: [
+            Image.network(
+              'https://greencar.ngo/assets/logo.jpg',
+              height: 40,
+              width: 40,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.directions_car,
+                  color: AppColors.primaryGreen,
+                  size: 30,
+                );
+              },
+            ),
+            SizedBox(width: 8),
+            Text(
+              'GreenCar',
+              style: TextStyle(
+                color: AppColors.primaryGreen,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+          ],
         ),
         leading: IconButton(
           icon: Icon(Icons.menu, color: AppColors.primaryGreen),
@@ -70,19 +90,159 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 24),
+                
+                // Find Ride / Offer Ride tabs
+                _buildRideTabs(),
+                SizedBox(height: 16),
 
-                // Source and destination fields
-                _buildSourceDestinationCard(),
+                // Source and destination fields or Offer ride form based on selected tab
+                _selectedTabIndex == 0 
+                    ? _buildSourceDestinationCard() 
+                    : _buildOfferRideButton(),
                 SizedBox(height: 24),
 
-                // Latest rides section
-                _buildLatestRidesSection(),
+                // Latest rides section (only show in Find Ride tab)
+                if (_selectedTabIndex == 0) _buildLatestRidesSection(),
               ],
             ),
           ),
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+  
+  Widget _buildRideTabs() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedTabIndex = 0;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _selectedTabIndex == 0 
+                      ? AppColors.primaryGreen 
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    'Find Ride',
+                    style: TextStyle(
+                      color: _selectedTabIndex == 0 
+                          ? Colors.white 
+                          : Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedTabIndex = 1;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _selectedTabIndex == 1 
+                      ? AppColors.primaryGreen 
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    'Offer Ride',
+                    style: TextStyle(
+                      color: _selectedTabIndex == 1 
+                          ? Colors.white 
+                          : Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildOfferRideButton() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          children: [
+            Icon(
+              Icons.directions_car,
+              size: 60,
+              color: AppColors.primaryGreen,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Offer a ride and share your journey',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Help reduce carbon footprint by sharing your ride with others',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OfferRideScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                minimumSize: Size(double.infinity, 50),
+              ),
+              child: Text(
+                'Offer a Ride',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
