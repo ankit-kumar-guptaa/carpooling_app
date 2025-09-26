@@ -24,40 +24,27 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: [
-            Image.network(
-              'https://greencar.ngo/assets/logo.jpg',
-              height: 40,
-              width: 40,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.directions_car,
-                  color: AppColors.primaryGreen,
-                  size: 30,
-                );
-              },
-            ),
-            SizedBox(width: 8),
-            Text(
-              'GreenCar',
-              style: TextStyle(
+        title: Center(
+          child: Image.asset(
+            'lib/assets/images/logo.png',
+            height: 180,
+            width: 180,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.directions_car,
                 color: AppColors.primaryGreen,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-          ],
+                size: 50,
+              );
+            },
+          ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: AppColors.primaryGreen),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications_outlined, color: AppColors.primaryGreen),
+            icon: Icon(
+              Icons.notifications_outlined,
+              color: AppColors.primaryGreen,
+            ),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Notifications coming soon!')),
@@ -77,27 +64,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Welcome message
                 Text(
                   'Hello, User!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Where are you going today?',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 24),
-                
+
                 // Find Ride / Offer Ride tabs
                 _buildRideTabs(),
                 SizedBox(height: 16),
 
                 // Source and destination fields or Offer ride form based on selected tab
-                _selectedTabIndex == 0 
-                    ? _buildSourceDestinationCard() 
+                _selectedTabIndex == 0
+                    ? _buildSourceDestinationCard()
                     : _buildOfferRideButton(),
                 SizedBox(height: 24),
 
@@ -111,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
-  
+
   Widget _buildRideTabs() {
     return Container(
       decoration: BoxDecoration(
@@ -130,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: _selectedTabIndex == 0 
-                      ? AppColors.primaryGreen 
+                  color: _selectedTabIndex == 0
+                      ? AppColors.primaryGreen
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -139,8 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     'Find Ride',
                     style: TextStyle(
-                      color: _selectedTabIndex == 0 
-                          ? Colors.white 
+                      color: _selectedTabIndex == 0
+                          ? Colors.white
                           : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -159,8 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: _selectedTabIndex == 1 
-                      ? AppColors.primaryGreen 
+                  color: _selectedTabIndex == 1
+                      ? AppColors.primaryGreen
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -168,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     'Offer Ride',
                     style: TextStyle(
-                      color: _selectedTabIndex == 1 
-                          ? Colors.white 
+                      color: _selectedTabIndex == 1
+                          ? Colors.white
                           : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -182,47 +163,34 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  
+
   Widget _buildOfferRideButton() {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
-            Icon(
-              Icons.directions_car,
-              size: 60,
-              color: AppColors.primaryGreen,
-            ),
+            Icon(Icons.directions_car, size: 60, color: AppColors.primaryGreen),
             SizedBox(height: 16),
             Text(
               'Offer a ride and share your journey',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
               'Help reduce carbon footprint by sharing your ride with others',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(color: Colors.grey[600]),
             ),
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => OfferRideScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => OfferRideScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -234,10 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Text(
                 'Offer a Ride',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -249,9 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSourceDestinationCard() {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -270,19 +233,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.circle,
-                      color: AppColors.primaryGreen,
-                      size: 16,
-                    ),
+                    Icon(Icons.circle, color: AppColors.primaryGreen, size: 16),
                     SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         'Enter pickup location',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ),
                   ],
@@ -304,19 +260,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 16,
-                    ),
+                    Icon(Icons.location_on, color: Colors.red, size: 16),
                     SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         'Enter drop location',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ),
                   ],
@@ -327,9 +276,9 @@ class _HomeScreenState extends State<HomeScreen> {
             // Find rides button
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Finding rides...')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Finding rides...')));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryGreen,
@@ -340,10 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Text(
                 'Find Rides',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -383,10 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Text(
           'Latest Rides',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 16),
         ...latestRides.map((ride) => _buildRideCard(ride)).toList(),
@@ -398,9 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Card(
       margin: EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -441,11 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                            size: 12,
-                          ),
+                          Icon(Icons.location_on, color: Colors.red, size: 12),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -474,10 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Text(
                       '${ride['seats']} seats',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -489,16 +423,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   ride['date'],
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 TextButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Booking ride...')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Booking ride...')));
                   },
                   child: Text(
                     'Book Now',
@@ -523,7 +454,20 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _currentIndex = index;
         });
-        if (index == 4) {
+        if (index == 1) {
+          // Find
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AvailableRidesScreen()),
+          );
+        } else if (index == 2) {
+          // Offer
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OfferRideScreen()),
+          );
+        } else if (index == 4) {
+          // Menu - Open drawer
           _scaffoldKey.currentState?.openDrawer();
         }
       },
@@ -531,26 +475,15 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItemColor: AppColors.primaryGreen,
       unselectedItemColor: Colors.grey,
       items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(
           icon: Icon(Icons.directions_car),
           label: 'My Rides',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
-          label: 'Response',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.menu),
-          label: 'Menu',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Response'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+
+        BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
       ],
     );
   }
@@ -561,49 +494,31 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: AppColors.primaryGreen,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                    color: AppColors.primaryGreen,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'User Name',
-                  style: TextStyle(
+            decoration: BoxDecoration(color: AppColors.primaryGreen),
+            child: Center(
+              child: Image.network(
+                'https://greencar.ngo/assets/logo.jpg',
+                height: 100,
+                width: 100,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.directions_car,
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'user@example.com',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+                    size: 80,
+                  );
+                },
+              ),
             ),
           ),
-          _buildDrawerItem(Icons.home, 'Home'),
-          _buildDrawerItem(Icons.directions_car, 'My Rides'),
-          _buildDrawerItem(Icons.wallet, 'Wallet'),
-          _buildDrawerItem(Icons.notifications, 'Notifications'),
-          _buildDrawerItem(Icons.help, 'Help & Support'),
-          _buildDrawerItem(Icons.info, 'About Us'),
-          _buildDrawerItem(Icons.share, 'Invite Friends'),
-          Divider(),
-          _buildDrawerItem(Icons.logout, 'Logout'),
+          _buildDrawerItem(Icons.description_outlined, 'Terms and Conditions'),
+          _buildDrawerItem(Icons.security_outlined, 'Carpool Safety Tips'),
+          _buildDrawerItem(Icons.privacy_tip_outlined, 'Privacy Policy'),
+          _buildDrawerItem(Icons.info_outline, 'Disclaimer'),
+          _buildDrawerItem(Icons.business_outlined, 'GreenCar as CSR Project'),
+          _buildDrawerItem(Icons.eco_outlined, 'ESG with GreenCar'),
+          _buildDrawerItem(Icons.volunteer_activism_outlined, 'Show You Care'),
+          _buildDrawerItem(Icons.handshake_outlined, 'Our Sponsors'),
+          _buildDrawerItem(Icons.groups_outlined, 'About Us'),
         ],
       ),
     );
@@ -615,9 +530,9 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Text(title),
       onTap: () {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$title coming soon!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$title coming soon!')));
       },
     );
   }
